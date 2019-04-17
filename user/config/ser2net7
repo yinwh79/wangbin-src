@@ -1,0 +1,41 @@
+config ser2net
+	option baud '115200'
+	option databit '8'
+	option paritybit 'NONE'
+	option stopbit '1'
+ 	option packtime	'10'
+	option packlen	'1500'
+
+	option workmode 'TCPS'
+	option remoteaddr '192.168.0.201'
+	option remoteport '20007'
+	option localport '20007'
+	option enctype 'SSLV3'
+	option encagri 'SSL_SHA'
+	option enccert 'NONE'
+
+	option workmodeb 'NONE'
+	option remoteaddrb '0'
+	option localportb '20007'
+
+	option loginen 'OFF'
+	option loginpkt 'login'
+	option logintype 'ASCII'
+	option loginwhen 'FIRST'
+	option login_len	'5'
+
+	option hearten 'OFF'
+	option hearttp 'NET'
+	option heart_aschex 'ASCII'
+	option heartpkt 'heart'
+	option heart_len	'5'	
+	option hearttime '30'
+
+	option modbustcp 'OFF'
+	option syncbaud 'ON'
+	option reconnecttimeout '86400'
+
+	option htptp 'GET'
+	option htpurl '/1.php?'
+	option htphead 'Connection:close'
+	option htpchd 'ON'

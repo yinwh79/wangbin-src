@@ -1,0 +1,101 @@
+#!/bin/sh  
+  
+printf "system initializing ... \n"  
+
+# link the config file
+export TZ=`uci get system.@system[0].timezone -q`
+
+# start gpio task  
+printf "start: gpio/LED/KEY\n"
+/root/gpio &
+#echo 0 > /sys/class/gpio/gpio46/value
+
+# set diagnostics
+printf "start: diagnostics\n"
+echo ping www.baidu.com -w 3 > /tmp/diagnostics.input
+
+# set syslogd path
+# syslogd -O /tmp/syslogd.txt -s 128 -R 192.168.1.247:12120
+printf "start: syslogd \n"
+logaddr="-R "`uci get system.@system[0].log_ip -q`:`uci get system.@system[0].log_port -q`
+if [ "$logaddr" == "-R :" ]
+then 
+	logaddr=""
+fi
+syslogd -O /tmp/syslogd.txt -s `uci get system.@system[0].log_size -q` $logaddr -l `uci get system.@system[0].conloglevel -q`      
+
+# set Hostname  
+printf "start: Hostname\n"
+hostname `uci get -q system.@system[0].hostname`
+  
+#network init
+/mnt/user/network_init.sh &
+
+  
+#set telnetdserver
+#printf "start telnetd server ... \n" 
+#telnetd
+
+# set dropbear/ssh server
+printf "start: dropbear/sshserver\n"
+#cd /etc/dropbear
+#dropbearkey -t rsa -f dropbear_rsa_host_key
+#dropbearkey -t dss -f dropbear_dss_host_key
+dropbear -p 22
+
+# get ntp time
+printf "start: ntp client \n"
+/mnt/user/timeget.sh &
+
+# set Firewall  
+# set schedule task (crontab)
+printf "start: crontab \n"
+cp /mnt/user/crontabs/root /var/spool/cron/crontabs/
+chmod 777 /var/spool/cron/crontabs/root
+crond
+  
+# set httpd server  
+printf "set httpd server ... \n"  
+echo A:* > /etc/httpd.conf
+echo E404:/path/e404.html >> /etc/httpd.conf
+if [ `uci get system.@system[0].lang -q` == "cn" ]
+then 
+	echo I:iframe.html >> /etc/httpd.conf
+else
+	echo I:iframeen.html >> /etc/httpd.conf
+fi
+echo *.htm:/www/ssi-bin/httpd.ssi >> /etc/httpd.conf
+echo *.html:/www/ssi-bin/httpd.ssi >> /etc/httpd.conf
+echo /:`uci get system.@system[0].username -q`:`uci get system.@system[0].password -q` >> /etc/httpd.conf 
+httpd -c /etc/httpd.conf -h /www/ -p `uci get httpd.main.http_port -q`
+  
+# ser2net start  
+#printf "start: N668-ser2net\n"
+#/root/USR_N668 1 /dev/ttyS1 &  
+#/root/USR_N668 2 /dev/ttyS2 &  
+#/root/USR_N668 3 /dev/ttyS3 &  
+#/root/USR_N668 4 /dev/ttyS4 &  
+#/root/USR_N668 5 /dev/ttyS5 &  
+#/root/USR_N668 6 /dev/ttyS6 &  
+#/root/USR_N668 7 /dev/ttyS7 &  
+#/root/USR_N668 8 /dev/ttyS8 &  
+
+# locator and at 
+printf "start: N668-locator \n"
+/root/locator &  
+
+printf "start: remotemanager \n"
+if [ `uci get remotem.@remotem[0].uenabled -q` == "ON" ] || [ `uci get remotem.@remotem[0].menabled -q` == "ON" ]
+then
+	/root/remotemanager &  
+fi
+
+# ddns start
+/mnt/user/ddns_init.sh &
+
+
+printf "shell end, exit...\n"
+
+# set led_ready on
+#echo 1 > /sys/class/gpio/gpio46/value
+

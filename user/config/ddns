@@ -1,0 +1,14 @@
+#################################################################
+
+
+config service "myddns"
+	option enabled		"OFF"
+
+	option service_name	"phlinux3.oray.net"
+	option domain		"1a516r1619.iask.in"
+	option username		"testusername"
+	option password		"testpassword"	
+
+	option ip_interface	"eth0"
+
+

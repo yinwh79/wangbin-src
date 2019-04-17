@@ -1,0 +1,9 @@
+
+config interface 'mysnmp'
+	option enabled 'on'
+	option community 'public'
+	option contact '127.0.0.1'
+	option location '255.0.0.0'
+	option trapserver '192.168.1.247'
+
+

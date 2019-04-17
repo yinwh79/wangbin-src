@@ -1,0 +1,14 @@
+
+config remotem
+	option uenabled 'OFF'
+	option userveraddr 'ycsj1.usr.cn'
+	option uport '30001'
+	option uinterval '3600'
+
+	option menabled 'OFF'
+	option mserveraddr 'ycsj1.usr.cn'
+	option mport '30001'
+	option mheartpkt 'Heartpkt'
+	option minterval '30'
+	option minterval_mon '3600'
+

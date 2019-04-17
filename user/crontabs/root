@@ -1,0 +1,4 @@
+*/10 * * * * echo crontest:`date` > /tmp/cron.log
+*/5 * * * * /mnt/user/dhcp_renew.sh
+*/1 * * * * /mnt/user/reset_timeout.sh
+2 */2 * * * /mnt/user/timeget.sh

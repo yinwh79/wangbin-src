@@ -1,0 +1,27 @@
+
+config system
+	option zonename 'Asia/Beijing'
+	option timezone 'CST-8'
+	option log_size '128'
+	option conloglevel '7'
+	option lang 'cn'
+	option theme 'usr'
+	option ntpenableserver '0'
+	option	group	'ETH'
+	option hostname 'USR-N668'
+	option echo_on	'0'
+	option username	'admin'
+	option password 'admin'
+	option ntpserver1 'stdtime.gov.hk'
+	option ntpserver2 '1.openwrt.pool.ntp.org'
+	option ntpserver3 '2.openwrt.pool.ntp.org'
+	option ntpenabled '1'
+	option ntpintvl	'86400'
+	option httpindex 'iframe.html'
+
+config system reset
+	option timeout '3600'
+
+config system 'search'
+	option cmd 'WWW.USR.CN'
+	option port '48899'
